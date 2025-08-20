@@ -93,20 +93,28 @@ class Results(Resource):
         return Response(tasks, mimetype="application/json", status=200)
     
 
-class TaskHistory(Resource):
-    # ListTaskHistory
+class History(Resource):
+    # ListHistory
     def get(self):
-        # Get all the task history objects and return them to the user
-        history = TaskHistory.objects().to_json()
+        # Get all task history objectgs so we can return them
+        task_history = TaskHistory.objects().to_json()
+        # Update any served tasks with results
+        # Get all relut objects and retrun them:
         results = Result.objects().to_json()
         json_obj = json.loads(results)
-        return Response(history, mimetype="application/json", status=200)
-
-    # AddTaskHistory
-    def post(self):
-        # Parse out the JSON body we want to add to the database
-        body = request.get_json()
-        json_obj = json.loads(json.dumps(body))
-        # Save TaskHistory object to database
-        TaskHistory(**json_obj).save()
-        return Response(json.dumps({"message": "Task history saved successfully"}), mimetype="application/json", status=201)
+        # Format each result from the imploant to be displayable:
+        result_obj_collection = []
+        for i in range(len(json_obj)):
+            for field in json_obj[i]:
+                result_obj_collection.append({
+                    "task_id": field,
+                    "task_results": json_obj[i][field]
+                })
+        # For each result in the collection, check for a corresponding task ID and if
+        # there's a match, update it with the results. This is hacky and there's probably
+        # a more elegant solution to update tasks with their results when they come in...
+        for result in result_obj_collection:
+            if TaskHistory.objects(task_id=result["task_id"]):
+                TaskHistory.objects(task_id=result["task_id"]).update_one(
+                    set__task_results=result["task_results"])
+        return Response(task_history, mimetype="application/json", status=200)
