@@ -56,5 +56,6 @@ venv.bak/
 *.vcxproj.user
 .vs
 CppProperties.json
+x64/
 
 vcpkg*

