@@ -50,5 +50,11 @@ venv.bak/
 
 # C++ ignores:
 *.exe
+*.vcxproj
+*.vcxproj.filters
+*.sln
+*.vcxproj.user
+.vs
+CppProperties.json
 
 vcpkg*
