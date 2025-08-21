@@ -51,7 +51,6 @@ venv.bak/
 # C++ ignores:
 *.exe
 # C++ ignores:
-*.exe
 *.vcxproj
 *.vcxproj.filters
 *.sln
@@ -59,5 +58,3 @@ venv.bak/
 .vs
 CppProperties.json
 x64/
-
-vcpkg*
