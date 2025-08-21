@@ -50,3 +50,5 @@ venv.bak/
 
 # C++ ignores:
 *.exe
+
+vcpkg*
