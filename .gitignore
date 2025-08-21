@@ -46,3 +46,7 @@ venv.bak/
 *.pyc
 *.pyo
 *.pyd
+
+
+# C++ ignores:
+*.exe
