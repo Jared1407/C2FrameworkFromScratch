@@ -50,6 +50,8 @@ venv.bak/
 
 # C++ ignores:
 *.exe
+# C++ ignores:
+*.exe
 *.vcxproj
 *.vcxproj.filters
 *.sln
