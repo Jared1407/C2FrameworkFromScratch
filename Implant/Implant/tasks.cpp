@@ -29,7 +29,8 @@
     // ===========================================================================================
     if (taskType == PingTask::key) {
         return PingTask{
-            id
+            id,
+            taskTree.get_child("").get_value<std::string>()
         };
     }
     if (taskType == ConfigureTask::key) {
@@ -66,12 +67,26 @@
 
 // PingTask
 // -------------------------------------------------------------------------------------------
-PingTask::PingTask(const boost::uuids::uuid& id)
-    : id{ id } {}
+PingTask::PingTask(const boost::uuids::uuid& id, std::string host)
+    : id{ id },
+    host{ std::move(host)} {}
 
 Result PingTask::run() const {
-    const auto pingResult = "PONG!";
-    return Result{ id, pingResult, true };
+    std::string command = "ping" + host;
+    std::string result;
+    
+    try {
+        std::array<char, 128> buffer{};
+        std::unique_ptr<FILE, decltype(&_pclose)> pipe{
+            _popen(command.c_str(),"r"),
+            _pclose
+        };
+
+    }
+    catch(const std::exception& e){
+        return Result{ id, e.what(), false };
+
+    }
 }
 
 // ConfigureTask

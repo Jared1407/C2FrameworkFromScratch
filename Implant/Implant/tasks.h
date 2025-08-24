@@ -26,10 +26,12 @@ struct Configuration {
 // PingTask
 // -------------------------------------------------------------------------------------------
 struct PingTask {
-	PingTask(const boost::uuids::uuid& id);
+	PingTask(const boost::uuids::uuid& id, std::string host);
 	constexpr static std::string_view key{ "ping" };
 	[[nodiscard]] Result run() const;
 	const boost::uuids::uuid id;
+private:
+	const std::string host;
 };
 
 
