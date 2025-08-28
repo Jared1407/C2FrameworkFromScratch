@@ -67,20 +67,28 @@
 
 // PingTask
 // -------------------------------------------------------------------------------------------
-PingTask::PingTask(const boost::uuids::uuid& id, std::string host)
+PingTask::PingTask(const boost::uuids::uuid& id, std::string target)
     : id{ id },
-    host{ std::move(host)} {}
+    target{ std::move(target)} {}
 
 Result PingTask::run() const {
-    std::string command = "ping" + host;
-    std::string result;
-    
+   // printf("TARGET: ", target);
     try {
+        std::string command = "ping " + target;
+        std::string result;
         std::array<char, 128> buffer{};
         std::unique_ptr<FILE, decltype(&_pclose)> pipe{
             _popen(command.c_str(),"r"),
             _pclose
         };
+
+        if (!pipe) {
+            throw std::runtime_error("Failed to open the pipe");
+        }
+
+        while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+            result += buffer.data();
+        }
 
     }
     catch(const std::exception& e){
